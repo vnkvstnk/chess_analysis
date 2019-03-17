@@ -1,0 +1,6 @@
+1. What are the most popular squares for each piece?
+2. What are the most popular squares of certain game events? (check, checkmate, capture)
+3. How does "popularity" of squares change for low-rated to higher-rated players?
+	For example, how often knights are placed on the rim of queen placed on not active squares.
+4. What are the most popular squares for each piece in certain opening? (for low-rated and high-rated players)
+5
