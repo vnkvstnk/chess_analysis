@@ -20,6 +20,33 @@ update_table <- function (this, with_this) {
     updated
 }
 
+# Loads a pgn file
+import_pgn <- function (filename) {
+    games <- read.pgn(filename,
+                      n.moves = TRUE,
+                      extract.moves = FALSE, 
+                      stat.moves = FALSE,
+                      add.tags = c("WhiteElo", "BlackElo","ECO", "WhiteTitle", "BlackTitle",
+                                   "TimeControl", "Termination")) %>%
+        as_tibble() %>%
+        mutate_at(c("Termination", "ECO", "WhiteTitle", "BlackTitle"),
+                  list(factor)) %>%
+        mutate(Date = as.Date(Date, "%Y.%m.%d"),
+               Tournament = grepl("tournament",
+                                  Event,
+                                  ignore.case = TRUE),
+               Type = factor(sapply(strsplit(Event, " "), function(x) x[2]))) %>%
+        separate(col = TimeControl,
+                 into = c("BaseTime", "Increment"),
+                 convert = TRUE) %>%
+        select(-c(Round, Event)) %>%
+        filter(NMoves >= 3)
+    games
+}
+
+
+
+
 
 # 1. What are the most popular squares for each piece?
 # (rchess package turned out to be extremely slow)
@@ -68,8 +95,8 @@ popular_squares <- function (pgn, pieces = c("p", "k", "q", "b", "n", "r")) {
     squares$rook_squares <- moves$white_moves[grepl("^R", moves$white_moves)]
     
     # Take only last two characters and present each set of squares as a table
-    squares <- sapply(squares, str_sub, -2, -1)
-    squares <- sapply(squares, table)
+    squares <- lapply(squares, str_sub, -2, -1)
+    squares <- lapply(squares, table)
     
     squares
 }
