@@ -1,1 +1,2 @@
 http://jkunst.com/r/visualizing-chess-data-with-ggplot/
+Tiled heatmap: http://www.roymfrancis.com/a-guide-to-elegant-tiled-heatmaps-in-r/
