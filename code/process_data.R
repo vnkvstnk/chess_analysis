@@ -3,17 +3,12 @@ library(bigchess)
 library(dplyr)
 library(tidyr)
 source("./code/functions.R")
+source("./code/popular_squares.R")
 
-# Load pgn files (for now, I will use only one file with 97339 games)
+# Importing games data
 rds_file <- "./data/processed/2018-05.1.rds"
-pgn_file <- "./data/raw/2018-05.1.pgn"
+games <- readRDS(rds_file)
 
-if (!file.exists(rds_file)) {
-    games <- import_pgn(pgn_file)
-    saveRDS(games, rds_file)
-} else {
-    games <- readRDS(rds_file)
-}
 
 # Getting popular squares
 squares <- list(pawn_squares=NULL, queen_squares=NULL, king_squares=NULL,
@@ -26,3 +21,6 @@ for (i in 1:nrow(games)) {
     }
     if (i %% 1000 == 0) print(i)
 }
+
+# Transforming to board matrices
+squares <- lapply(squares, board_matrix)
