@@ -1,0 +1,64 @@
+Games are saved as big-size *.pgn files, which are then separated by `pgnSplit.exe` into
+small chunks of approximate size of 200 MB.
+
+Files:
+
+1) functions.R
+
+Contains help function that don't take much physical space:
+	square_to_index()
+	update_table()
+	
+2) import_pgn.R
+
+Function import_png(). The function reads certain fields from a pgn-file 
+(see function "read.pgn" from "bigchess" package) and returns a table (as tibble)
+where each row is a game and each column is a field from the pgn-file.
+
+3) popular_squares.R
+
+Function popular_squares(). At the moment the function only takes into account white moves.
+The function takes a single string of game moves (as in "Movetext" variable
+from a table produced by the "import_pgn()" function) and a character vector of pieces (p - pawn,
+k - king, q - queen, b - bishop, n - knight, r - rook) for which the "squares popularity" will be computed.
+The function returns a list of variables named "pawn_squares", "queen_squares" etc.
+Each variable contains a table with squares (in algebraic notation, i.e. "e4", "h8") as headers and
+the numbers of times the piece was placed on this square as values.
+Note, that the function works for one string of moves only, i.e. for one game.
+
+4) board_matrix.R
+
+Function board_matrix(). 
+Function takes a single table of squares with number of moves for each square, such as an element of a list
+returned by the "popular_squares()" function.
+The function returns a matrix, representing a chess board with numbers representing the number of times
+the piece was placed on the square.    
+    Matrix, representing an empty board.
+    Column names are letters, row names are characters of numbers.
+    Looks like this:
+    [[1]]
+       a b c d e f g h
+     8 0 0 0 0 0 0 0 0
+     7 0 0 0 0 0 0 0 0
+     6 0 0 0 0 0 0 0 0
+     5 0 0 0 0 0 0 0 0
+     4 0 0 0 0 0 0 0 0
+     3 0 0 0 0 0 0 0 0
+     2 0 0 0 0 0 0 0 0
+     1 0 0 0 0 0 0 0 0
+
+5) process_data.R
+
+Contains the code to process the data from beginning using the above described functions.
+The output so far is the list of board matrices (one matrix for each piece) calculated
+from a single rds-file (about 90k games). 
+
+6) save_pgn_as_rds.R
+
+pgn-chunks are processed by "save_pgn_as_rds.R" and saved as *.rds files of significantly
+smaller size. "save_pgn_as_rds.R" employs function "import_pgn()" which is stored in
+file "functions.R". This step is done only once when converting pgn-files to smaller
+and faster-to-read rds-files.
+However, if later we'd like to read in some fields from pgn files that we hadn't read, 
+we'll have to do the pgn-rds conversion again with new parameters, passed to the "import_pgn()".
+

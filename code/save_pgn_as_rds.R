@@ -1,4 +1,4 @@
-source("./code/functions.R")
+source("./code/import_pgn.R")
 require(stringr)
 
 for (file in dir("./data/raw")) {
@@ -10,7 +10,7 @@ for (file in dir("./data/raw")) {
         next
     }
     cat("Processing ", pgn_name, "\n")
-    x <- import_pgn(pgn_name)
+    x <- import_pgn(pgn_name)  # Does the job
     saveRDS(x, rds_name)
     cat(rds_name, " has been saved.\n")
 }

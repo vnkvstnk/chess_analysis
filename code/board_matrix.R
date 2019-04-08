@@ -25,7 +25,5 @@ board_matrix <- function(squares_table) {
         rank <- substr(square, 2, 2)
         board[rank, file] <- squares_table[square]
     }
-        
-    board    
-
+    board   
 }
