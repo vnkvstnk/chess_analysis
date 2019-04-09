@@ -1,9 +1,7 @@
 # Load packages
-library(bigchess)
-library(dplyr)
-library(tidyr)
 source("./code/functions.R")
 source("./code/popular_squares.R")
+source("./code/board_matrix.R")
 
 # Importing games data
 rds_file <- "./data/processed/2018-05.1.rds"
