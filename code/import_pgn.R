@@ -5,8 +5,13 @@ require(tidyr)
 
 
 import_pgn <- function (filename,
-                        tags = c("WhiteElo", "BlackElo","ECO", "WhiteTitle", "BlackTitle",
-                                 "TimeControl", "Termination")) {
+                        tags = c("WhiteElo",
+                                 "BlackElo",
+                                 "ECO",
+                                 "WhiteTitle",
+                                 "BlackTitle",
+                                 "TimeControl",
+                                 "Termination")) {
     games <- read.pgn(filename,
                       n.moves = TRUE,
                       extract.moves = FALSE, 
@@ -19,7 +24,8 @@ import_pgn <- function (filename,
                Tournament = grepl("tournament",
                                   Event,
                                   ignore.case = TRUE),
-               Type = factor(sapply(strsplit(Event, " "), function(x) x[2]))) %>%
+               Type = factor(sapply(strsplit(Event, " "),
+                                    function(x) x[2]))) %>%
         separate(col = TimeControl,
                  into = c("BaseTime", "Increment"),
                  convert = TRUE) %>%
