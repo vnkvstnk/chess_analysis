@@ -2,7 +2,7 @@ popular_squares <- function (pgn, pieces = c("p", "k", "q", "b", "n", "r")) {
     require(stringr)
     require(dplyr)
     
-    # Preallocating output variable
+    # Preallocating output variable  *** Not used later, should be revised ***   
     output <- vector("list", length(pieces))
     names(output) <- pieces
     for (i in names(output)) output[[i]] <- matrix(0, 8, 8)
@@ -11,7 +11,7 @@ popular_squares <- function (pgn, pieces = c("p", "k", "q", "b", "n", "r")) {
     # a. Split move string at digits with dots.
     spl_pgn <- strsplit(pgn, "\\d+\\. ")[[1]][-1] %>%  # First element is empty
         
-        # b. Squish each move (remove unneded spaces) and remove punctuation
+        # b. Squish each move (remove excessive spaces) and remove punctuation
         str_squish() %>% str_remove_all("[!\\?\\+#]") %>%
         
         # c. Split at space
