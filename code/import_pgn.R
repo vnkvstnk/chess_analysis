@@ -7,25 +7,59 @@ require(tidyr)
 
 import_pgn <- function (filename,
                         tags = c("WhiteElo", "BlackElo", "ECO", "Opening", "WhiteTitle",
-                                 "BlackTitle", "TimeControl", "Termination")) {
+                                 "BlackTitle", "TimeControl", "Termination",
+                                 "WhiteRatingDiff", "BlackRatingDiff")) {
+    
+    # Usung read.pgn function of "bigchess" package to read in a pgn file
     games <- read.pgn(filename,
                       n.moves = TRUE,
                       extract.moves = FALSE, 
                       stat.moves = FALSE,
                       add.tags = tags) %>%
+        
         as_tibble() %>%
+        
+        # Converting the following columns to factors
         mutate_at(c("Termination", "ECO", "WhiteTitle", "BlackTitle", "Opening"),
                   list(factor)) %>%
+        
+        # Converting Date column to Date data type
         mutate(Date = as.Date(Date, "%Y.%m.%d"),
+               
+        # If a game was played in a tournament or not       
                Tournament = grepl("tournament",
                                   Event,
                                   ignore.case = TRUE),
+        
+        # Type of the game (rapid, blitz, etc)
                Type = factor(sapply(strsplit(Event, " "),
-                                    function(x) x[2]))) %>%
+                                    function(x) x[2])),
+        
+        # Character vector of white's moves in order
+               Whitemoves = sapply(Movetext,
+                                   break_moves, side = "white"),
+        
+        # Character vector of black's moves in order
+               Blackmoves = sapply(Movetext,
+                                   break_moves, side = "black"),
+        
+        # White's rating change after the game
+               WhiteRatingDiff = as.integer(WhiteRatingDiff),
+        
+        # Black's rating change after the game
+               BlackRatingDiff = as.integer(BlackRatingDiff)) %>%
+        
+        # Creating two columns: BaseTime and Increment from TimeControl
         separate(col = TimeControl,
                  into = c("BaseTime", "Increment"),
                  convert = TRUE) %>%
-        select(-c(Round, Event)) %>%
+        
+        # Removing the following columns
+        select(-c(Round, Event, Movetext)) %>%
+        
+        # Removing games with less than or equal three moves
         filter(NMoves >= 3)
+    
     games
+    
 }
