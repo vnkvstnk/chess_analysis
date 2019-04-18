@@ -8,7 +8,7 @@ require(tidyr)
 import_pgn <- function (filename,
                         tags = c("WhiteElo", "BlackElo", "ECO", "Opening", "WhiteTitle",
                                  "BlackTitle", "TimeControl", "Termination",
-                                 "WhiteRatingDiff", "BlackRatingDiff")) {
+                                 "WhiteRatingDiff", "BlackRatingDiff", "UTCTime")) {
     
     # Usung read.pgn function of "bigchess" package to read in a pgn file
     games <- read.pgn(filename,
@@ -24,7 +24,7 @@ import_pgn <- function (filename,
                   list(factor)) %>%
         
         # Converting Date column to Date data type
-        mutate(Date = as.Date(Date, "%Y.%m.%d"),
+         mutate(Date = paste(Date, UTCTime) %>% as.POSIXct(format = "%Y.%m.%d %H:%M:%S", tz = "UTC"),
                
         # If a game was played in a tournament or not       
                Tournament = grepl("tournament",
@@ -55,7 +55,7 @@ import_pgn <- function (filename,
                  convert = TRUE) %>%
         
         # Removing the following columns
-        select(-c(Round, Event, Movetext)) %>%
+        select(-c(Round, Event, Movetext, UTCTime)) %>%
         
         # Removing games with less than or equal three moves
         filter(NMoves >= 3)
