@@ -21,3 +21,8 @@ update_table <- function (this, with_this) {
     updated
 }
 
+# Extracts "n" last characters from string "x"
+substr_right <- function(x, n) {
+    substr(x, nchar(x) - n + 1, nchar(x))
+}
+
