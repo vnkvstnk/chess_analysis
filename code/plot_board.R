@@ -5,7 +5,7 @@ plot_board <- function(board) {
     require(RColorBrewer)
     
     # Reshaping "board" object to make it suitable for plotting
-    board <- as_tibble(board) %>%           # convert to data frame
+    board <- as_tibble(board, title = "Default title") %>%           # convert to data frame
         mutate(rank = rownames(board)) %>%  # adding rank numbers as a separate variable
         gather(file, count, -rank)          # leaving three variables in the table
     
@@ -20,6 +20,7 @@ plot_board <- function(board) {
         coord_fixed() + 
         labs(x = "",
              y = "",
+             title = title,
              fill = "Counts") + 
         theme(text = element_text(size = 22,
                                   face = "bold"),

@@ -23,20 +23,22 @@ piece_heatmap <- function(movetext, side = "white") {
     
     # 2. Handle castling
     # 2.1 Short castle
-    if ("O-O" %in% moves) {
-        if (side == "white") king_sq <- "g1"; rook_sq <- "f1"
-        if (side == "black") king_sq <- "g8"; rook_sq <- "f8"
-        output[king_sq, "k"] <- 1
-        output[rook_sq, "r"] <- 1
-    }
+    idx <- grepl("^O-O$", moves, fixed = TRUE)  # logical vector of castling moves
+    n_castle <- sum(idx)        # Number of castling moves
+    if (side == "white") king_sq <- "g1"; rook_sq <- "f1"
+    if (side == "black") king_sq <- "g8"; rook_sq <- "f8"
+    output[king_sq, "k"] <- n_castle
+    output[rook_sq, "r"] <- n_castle
+    moves <- moves[!idx]
     
     # 2.2 Long castle
-    if ("O-O-O" %in% moves) {
-        if (side == "white") king_sq <- "c1"; rook_sq <- "d1"
-        if (side == "black") king_sq <- "c8"; rook_sq <- "d8"
-        output[king_sq, "k"] <- 1
-        output[rook_sq, "r"] <- 1
-    }
+    idx <- grepl("O-O-O", moves, fixed = TRUE)
+    n_castle <- sum(idx) 
+    if (side == "white") king_sq <- "c1"; rook_sq <- "d1"
+    if (side == "black") king_sq <- "c8"; rook_sq <- "d8"
+    output[king_sq, "k"] <- n_castle
+    output[rook_sq, "r"] <- n_castle
+    moves <- moves[!idx]
     
     # 3. Pawn moves
     # 3.1 Regular moves, no captures
