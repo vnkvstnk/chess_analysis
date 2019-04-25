@@ -23,7 +23,7 @@ piece_heatmap <- function(movetext, side = "white") {
     
     # 2. Handle castling
     # 2.1 Short castle
-    idx <- grepl("^O-O$", moves, fixed = TRUE)  # logical vector of castling moves
+    idx <- grepl("^O-O$", moves)  # logical vector of castling moves
     n_castle <- sum(idx)        # Number of castling moves
     if (side == "white") king_sq <- "g1"; rook_sq <- "f1"
     if (side == "black") king_sq <- "g8"; rook_sq <- "f8"
@@ -45,7 +45,7 @@ piece_heatmap <- function(movetext, side = "white") {
     pattern <- "^[a-h]{1}\\d{1}"
     idx <- grepl(pattern, moves)  # logical vector of pawn moves
     pawn_squares <- sapply(moves[idx], substr, start = 1, stop = 2)  # taking first two characters
-    output[pawn_squares, "p"] <- 1
+    for (sq in pawn_squares) output[sq, "p"] <- output[sq, "p"] + 1
     moves <- moves[!idx] # removing pawn moves
     
     # 3.2 Captures
@@ -91,6 +91,7 @@ piece_heatmap <- function(movetext, side = "white") {
     moves <- moves[!idx]
     
     cat(length(moves), " moves left.\n")
+    cat(moves, "\n")
     
     output
 }
