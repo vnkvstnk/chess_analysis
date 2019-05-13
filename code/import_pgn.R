@@ -57,8 +57,8 @@ import_pgn <- function (filename,
         # Removing the following columns
         select(-c(Round, Event, Movetext, UTCTime)) %>%
         
-        # Removing games with less than or equal three moves
-        filter(NMoves >= 3)
+        # Removing games with less than three moves
+        filter(NMoves > 3)
     
     games
     
